@@ -5,19 +5,3 @@ body {
 .title-img {
   border-radius: 10px;
 }
-
-.targetTable {
-  width: 100%;
-  text-align: center;
-  border-collapse: collapse;
-  border-spacing: 0;
- }
- .targetTable th {
-  padding: 10px;
-  background: #e9faf9;
-  border: solid 1px #778ca3;
- }
- .targetTable td {
-  padding: 10px;
-  border: solid 1px #778ca3;
- }
