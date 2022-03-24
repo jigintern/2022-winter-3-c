@@ -6,8 +6,7 @@ import { Todo } from "./todo.ts";
 import * as postgres from "https://deno.land/x/postgres@v0.14.2/mod.ts";
 
 // Get the connection string from the environment variable "DATABASE_URL"
-// const databaseUrl = Deno.env.get("DATABASE_URL");
-const databaseUrl = "postgres://postgres:azumaru_tateyama@db.yfgbiwsxzqohfiowmpvz.supabase.co:6543/postgres";
+const databaseUrl = Deno.env.get("DATABASE_URL");
 
 
 
