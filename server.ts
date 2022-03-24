@@ -10,6 +10,7 @@ const databaseUrl = Deno.env.get("DATABASE_URL");
 
 
 
+
 // Create a database pool with three connections that are lazily established
 const pool = new postgres.Pool(databaseUrl, 3, true);
 
@@ -27,7 +28,6 @@ try {
   // Release the connection back into the pool
   connection.release();
 }
-
 
 // ToDo の API は Todo クラスにまとめてある
 const todo = new Todo();
@@ -58,6 +58,8 @@ serve((req) => {
                 return apiDatabase1(req);
             case "/api/database2":
                 return apiDatabase2(req);
+            case "/api/database3":
+                return apiDatabase3(req);
         }
     }
 
@@ -149,8 +151,9 @@ const apiDatabase1 = async (req: Request) => {
     for (let i=0; i<numDonor; i++){
         const element : any = result.rows[i];
         fundraisingRanking[i] = [element['from_name'], element['sum_money']];
-    };
+    }
     // console.log(text);
+    connection.release();
     return createJsonResponse({ message: fundraisingRanking });  
 };
 
@@ -170,7 +173,28 @@ const apiDatabase2 = async (req: Request) => {
         facilityList[i] = [Number(element['to_id']), element['to_name'], element['sum_money']];
     }
     // console.log(facilityList);
+    connection.release();
     return createJsonResponse({ message: facilityList });  
+};
+
+const apiDatabase3 = async (req: Request) => {
+    const json = (await req.json());
+    const id = json.message;
+    console.log(id);
+
+    // Connect to the database
+    const connection = await pool.connect();
+    const result = await connection.queryObject`
+                    SELECT * FROM user_data
+                    WHERE userid=${id}
+                    `;
+    // console.log(result);
+    const info : any = result.rows[0];
+    const userInfo = [info['time'], Number(info['userid']).toLocaleString() , info['name'], info['type'], info['description']];
+    console.log(userInfo);
+    connection.release();
+
+    return createJsonResponse({ message: userInfo });  
 };
 
 // type ApiReversePayload = {
