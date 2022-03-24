@@ -94,6 +94,17 @@ const displayDatabase3 = async (id) => {
 };
 
 
+
+const storeDatabase = async (id) => {
+  const data = await fetchJSON("/api/database4", {
+    message: id,
+  });
+
+  document.getElementById('wait').innerHTML = '※ ランキングに反映されるまで10秒ほどかかります';
+};
+
+
+
 window.onload = (event) => {
   // console.log(window.location.href);
   const params = (new URL(document.location)).searchParams;
@@ -103,7 +114,14 @@ window.onload = (event) => {
     const id = params.get('id');
     // window.alert(`ID=${id}`);
     displayDatabase3(id);
-  } else if (window.location.href.endsWith('/') || window.location.href.match('index.html')){
+  } else if (window.location.href.endsWith('/') || window.location.href.match('index.html') != null){
     displayDatabase1();
+  } else if (window.location.href.match('payment.html') != null) {
+    const status = params.get('redirect_status');
+    console.log(status);
+    if (status === 'succeeded') {
+      const id = 1  // 決め打ち
+      storeDatabase(id);
+    }
   }
 };
