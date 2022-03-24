@@ -66,7 +66,17 @@ const displayTodoList = async () => {
   });
 };
 
+const displayDatabase = async () => {
+  const data = await fetchJSON("/api/database", {
+    message: databaseContent.value,
+  });
+  // console.log(data);
+  // データベースの内容でテキストボックスを書き換える
+  document.getElementById("databaseContent").innerText = data.message;
+};
+
 window.onload = (event) => {
   // ページが読み込まれたら最新の ToDo の一覧を表示する
   displayTodoList();
+  displayDatabase();
 };
