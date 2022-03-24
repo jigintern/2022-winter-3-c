@@ -32,7 +32,7 @@ const displayDatabase1 = async () => {
 
     cellElem = trElem.insertCell(3);    // td要素を追加
     const detail = document.createElement('div');
-    detail.innerHTML = '<a href="./detail.html">詳細を見る</a>'
+    detail.innerHTML = `<a href="./detail.html?id=${facilityList[i][0].toLocaleString()}">詳細を見る</a>`
     cellElem.appendChild(detail);    // td要素に追加
   }
 };
