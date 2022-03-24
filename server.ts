@@ -141,8 +141,8 @@ const createJsonResponse = (obj: any) => new Response(JSON.stringify(obj), {
 const apiDatabase1 = async (req: Request) => {
     const connection = await pool.connect();
     const result = await connection.queryObject`
-                    SELECT from_name, SUM(money) as sum_money FROM fundraising
-                    GROUP BY from_name
+                    SELECT from_name, from_id, SUM(money) as sum_money FROM fundraising
+                    GROUP BY from_name, from_id
                     ORDER BY SUM(money) DESC
                     `;
     const numDonor = (result.rows).length;
@@ -150,7 +150,7 @@ const apiDatabase1 = async (req: Request) => {
     // console.log(result.rows);
     for (let i=0; i<numDonor; i++){
         const element : any = result.rows[i];
-        fundraisingRanking[i] = [element['from_name'], element['sum_money']];
+        fundraisingRanking[i] = [element['from_name'], element['sum_money'], Number(element['from_id']).toLocaleString()];
     }
     // console.log(text);
     connection.release();
@@ -170,7 +170,7 @@ const apiDatabase2 = async (req: Request) => {
     // console.log(result.rows);
     for (let i=0; i<numFacility; i++){
         const element : any = result.rows[i];
-        facilityList[i] = [Number(element['to_id']), element['to_name'], element['sum_money']];
+        facilityList[i] = [Number(element['to_id']).toLocaleString(), element['to_name'], element['sum_money']];
     }
     // console.log(facilityList);
     connection.release();
