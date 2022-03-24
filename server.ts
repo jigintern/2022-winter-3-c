@@ -53,6 +53,8 @@ serve((req) => {
                 return apiDatabase2(req);
             case "/api/database3":
                 return apiDatabase3(req);
+            case "/api/database4":
+                return storeDatabase(req);
         }
     }
 
@@ -141,4 +143,22 @@ const apiDatabase3 = async (req: Request) => {
     connection.release();
 
     return createJsonResponse({ message: userInfo });  
+};
+
+const storeDatabase = async (req: Request) => {
+    const json = (await req.json());
+    const id = json.message;
+    // console.log(id);
+
+    // Connect to the database
+    const connection = await pool.connect();
+    const result = await connection.queryObject`
+                    INSERT INTO fundraising(from_id, from_name, money, to_id, to_name)
+                    VALUES (1, 'azumaru', 50, 4, 'jig');
+                    `;
+    console.log(result);
+    const status = '1';
+    connection.release();
+
+    return createJsonResponse({ message: status});  
 };
