@@ -89,7 +89,7 @@ const displayDatabase3 = async (id) => {
   if (userInfo[3] === "donor") {
     document.getElementById('fund').innerHTML = '不可';
   } else if (userInfo[3] === "facility") {
-    document.getElementById('fund').innerHTML = `可<br><a href="./payment.html?id=${userInfo[1].toLocaleString()}">募金画面へ</a>`;
+    document.getElementById('fund').innerHTML = `可<br><a href="https://azumaru-stripe.herokuapp.com/checkout.html">募金画面へ</a>`;
   }
 };
 
