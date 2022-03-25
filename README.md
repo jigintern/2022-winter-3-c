@@ -7,7 +7,7 @@ This is the work of team-3-c of the 2022 [jig.jp](https://www.jig.jp/) winter in
 **災害募金Web** is the appliction that enables disaster relief donations on the web.
 
 It benefits the following people:
-* **Municipalities** that cannot afford to purchase relief supplies due to financial constraints
+* **Municipalities** that cannot afford to purchase relief supplies due to financial problems
 * **Companies** that want to raise awareness by contributing to fundraising
 * **Individuals** who simply want to make a donation
 
@@ -15,10 +15,20 @@ It benefits the following people:
 
 URL : https://jigintern-2022-winter-3-c.deno.dev/
 
+<table>
 <tr>
-<td><img src=""></td>
-<td><img src=""></td>
+  <td><img src="https://user-images.githubusercontent.com/60843722/160041764-9c0c915a-182e-4a2c-a7c3-546a3d1a1894.png">
 </tr>
+<tr>
+<td><img src="https://user-images.githubusercontent.com/60843722/160041760-b3764bbe-8339-4386-8b4c-4d9f3b64929a.png">
+</tr>
+</table>
+<table>
+<tr>
+<td><img src="https://user-images.githubusercontent.com/60843722/160041493-5b1a8167-bd27-4bb7-908f-5c60205ccb4e.png"></td>
+<td><img src="https://user-images.githubusercontent.com/60843722/160041497-181e277e-9b31-4c78-866f-e27954225567.png"></td>
+</tr>
+</table>
 
 The payment function is a trial version, so feel free to try it out.
 Valid credit card information that can be entered in the trial version can be found at : 
