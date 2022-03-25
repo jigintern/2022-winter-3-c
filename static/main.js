@@ -4,20 +4,30 @@ const displayDatabase1 = async () => {
   const data = await fetchJSON("/api/database1", {
     message: 0,
   });
-
   // データベースの内容でテーブルを書き換える
   const fundraisingRanking = data.message;
   console.log(fundraisingRanking);
 
+  let tmp_money = 100000000000; // 順位付けのための金額
+  let ranking = 0;  // 現在順位
+
   // table要素を取得
   const tableElem = document.getElementById('targetTable');
+
 
   for (let i=0; i<fundraisingRanking.length; i++) {
     // tbody要素にtr要素（行）を最後に追加
     const trElem = tableElem.tBodies[0].insertRow(-1);
 
+    const this_money = Number(fundraisingRanking[i][1]);
+
+    if (this_money < tmp_money) {
+      ranking = i+1;
+    }
+    tmp_money = this_money;
+
     let cellElem = trElem.insertCell(0);    // td要素を追加
-    cellElem.appendChild(document.createTextNode(i+1));    // td要素にテキストを追加
+    cellElem.appendChild(document.createTextNode(ranking));    // td要素にテキストを追加
 
     cellElem = trElem.insertCell(1);    // td要素を追加
     cellElem.appendChild(document.createTextNode(fundraisingRanking[i][0]));    // td要素にテキストを追加
@@ -33,7 +43,7 @@ const displayDatabase1 = async () => {
     cellElem = trElem.insertCell(3);    // td要素を追加
     const detail = document.createElement('div');
     detail.innerHTML = `<a href="./detail.html?id=${fundraisingRanking[i][2].toLocaleString()}">詳細を見る</a>`
-    cellElem.appendChild(detail);    // td要素に追加
+    cellElem.appendChild(detail);    // td要素にリンク追加
   }
 };
 
@@ -45,20 +55,16 @@ const displayDatabase2 = async () => {
 
   // データベースの内容でテーブルを書き換える
   const facilityList = data.message;
-
-  // table要素を取得
-  const tableElem = document.getElementById('targetTable');
+  const tableElem = document.getElementById('targetTable');  // table要素を取得
 
   for (let i=0; i<facilityList.length; i++) {
-    // tbody要素にtr要素（行）を最後に追加
-    const trElem = tableElem.tBodies[0].insertRow(-1);
+    const trElem = tableElem.tBodies[0].insertRow(-1);    // tbody要素にtr要素（行）を最後に追加
 
     let cellElem = trElem.insertCell(0);    // td要素を追加
     cellElem.appendChild(document.createTextNode(facilityList[i][0].toLocaleString()));    // td要素にテキストを追加
 
     cellElem = trElem.insertCell(1);    // td要素を追加
     cellElem.appendChild(document.createTextNode(facilityList[i][1]));    // td要素にテキストを追加
-
 
     cellElem = trElem.insertCell(2);    // td要素を追加
     const d = document.createElement('div');
@@ -70,7 +76,7 @@ const displayDatabase2 = async () => {
     cellElem = trElem.insertCell(3);    // td要素を追加
     const detail = document.createElement('div');
     detail.innerHTML = `<a href="./detail.html?id=${facilityList[i][0].toLocaleString()}">詳細を見る</a>`
-    cellElem.appendChild(detail);    // td要素に追加
+    cellElem.appendChild(detail);    // td要素にリンク追加
   }
 };
 
@@ -80,7 +86,6 @@ const displayDatabase3 = async (id) => {
   });
   // データベースの内容でテーブルを書き換える
   const userInfo = data.message;
-  // console.log(userInfo);
 
   document.getElementById('time').innerHTML = userInfo[0];
   document.getElementById('name').innerHTML = userInfo[2];
@@ -99,20 +104,18 @@ const storeDatabase = async (id) => {
   const data = await fetchJSON("/api/database4", {
     message: id,
   });
-
-  document.getElementById('wait').innerHTML = '※ ランキングに反映されるまで10秒ほどかかります';
+  // データベースを更新する
+  document.getElementById('wait').innerHTML = '※ 寄付していただいた金額がランキングに反映されます';
 };
 
 
 
 window.onload = (event) => {
-  // console.log(window.location.href);
   const params = (new URL(document.location)).searchParams;
   if (window.location.href.match('facility.html') != null) {
     displayDatabase2();
   } else if (window.location.href.match('detail.html') != null) {
     const id = params.get('id');
-    // window.alert(`ID=${id}`);
     displayDatabase3(id);
   } else if (window.location.href.endsWith('/') || window.location.href.match('index.html') != null){
     displayDatabase1();
@@ -120,7 +123,7 @@ window.onload = (event) => {
     const status = params.get('redirect_status');
     console.log(status);
     if (status === 'succeeded') {
-      const id = 1  // 決め打ち
+      const id = 1  // （現時点で）決め打ちのIDを使用している
       storeDatabase(id);
     }
   }

@@ -1,13 +1,10 @@
 import { serve } from "https://deno.land/std@0.127.0/http/server.ts";
 import { serveDir } from "https://deno.land/std@0.127.0/http/file_server.ts";
-import { format } from "https://deno.land/std@0.127.0/datetime/mod.ts";
-import { Todo } from "./todo.ts";
 
 import * as postgres from "https://deno.land/x/postgres@v0.14.2/mod.ts";
 
 // Get the connection string from the environment variable "DATABASE_URL"
 const databaseUrl = Deno.env.get("DATABASE_URL");
-
 
 
 // Create a database pool with three connections that are lazily established
@@ -28,9 +25,6 @@ try {
   connection.release();
 }
 
-// ToDo の API は Todo クラスにまとめてある
-const todo = new Todo();
-
 console.log("Listening on http://localhost:8000");
 serve((req) => {
     const url = new URL(req.url);
@@ -41,12 +35,6 @@ serve((req) => {
     // /api/ で始まる場合、API サーバっぽく処理して返す
     if (pathname.startsWith("/api/")) {
         switch (pathname) {
-            case "/api/todo/list":
-                return todo.apiList(req);
-            case "/api/todo/add":
-                return todo.apiAdd(req);
-            case "/api/todo/delete":
-                return todo.apiDelete(req);
             case "/api/database1":
                 return apiDatabase1(req);
             case "/api/database2":
@@ -67,8 +55,6 @@ serve((req) => {
     });
 });
 
-
-
 // JSON のレスポンスを生成する
 const createJsonResponse = (obj: any) => new Response(JSON.stringify(obj), {
     headers: {
@@ -76,15 +62,6 @@ const createJsonResponse = (obj: any) => new Response(JSON.stringify(obj), {
     }
 });
 
-// // クライアントから送られてきた JSON の message の文字列を反転して返す API
-// // curl -X POST -d '{ "message": "hello" }' http://localhost:8000/api/reverse
-// // → {"message":"olleh"}
-// const apiReverse = async (req: Request) => {
-//     const json = (await req.json()) as ApiReversePayload;
-//     const message = json.message;
-//     const reversedMessage = message.split("").reverse().join("");
-//     return createJsonResponse({ message: reversedMessage });
-// };
 
 const apiDatabase1 = async (req: Request) => {
     const connection = await pool.connect();
@@ -100,7 +77,6 @@ const apiDatabase1 = async (req: Request) => {
         const element : any = result.rows[i];
         fundraisingRanking[i] = [element['from_name'], element['sum_money'], Number(element['from_id']).toLocaleString()];
     }
-    // console.log(text);
     connection.release();
     return createJsonResponse({ message: fundraisingRanking });  
 };
@@ -115,12 +91,10 @@ const apiDatabase2 = async (req: Request) => {
                     `;
     const numFacility = (result.rows).length;
     const facilityList : any[] = new Array(numFacility);
-    // console.log(result.rows);
     for (let i=0; i<numFacility; i++){
         const element : any = result.rows[i];
         facilityList[i] = [Number(element['to_id']).toLocaleString(), element['to_name'], element['sum_money']];
     }
-    // console.log(facilityList);
     connection.release();
     return createJsonResponse({ message: facilityList });  
 };
@@ -136,7 +110,6 @@ const apiDatabase3 = async (req: Request) => {
                     SELECT * FROM user_data
                     WHERE userid=${id}
                     `;
-    // console.log(result);
     const info : any = result.rows[0];
     const userInfo = [info['time'], Number(info['userid']).toLocaleString() , info['name'], info['type'], info['description']];
     console.log(userInfo);
@@ -148,7 +121,6 @@ const apiDatabase3 = async (req: Request) => {
 const storeDatabase = async (req: Request) => {
     const json = (await req.json());
     const id = json.message;
-    // console.log(id);
 
     // Connect to the database
     const connection = await pool.connect();
@@ -156,7 +128,6 @@ const storeDatabase = async (req: Request) => {
                     INSERT INTO fundraising(from_id, from_name, money, to_id, to_name)
                     VALUES (1, 'azumaru', 50, 4, 'jig');
                     `;
-    console.log(result);
     const status = '1';
     connection.release();
 
